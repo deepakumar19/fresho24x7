@@ -72,6 +72,8 @@ const CategoryDetail = () => {
     }, [fetchCategories]);
     console.log('products', products);
     console.log(categories)
+
+    const selectedCategory = categories.filter(category=>category.id === categoryId);
     // Fetch products of a particular category
     const itemsWithCategory = products?.filter((p) => {
         return p.category === categoryId;
@@ -82,7 +84,7 @@ const CategoryDetail = () => {
             navigate("/")
         }
         else
-            dispatch(addToCart({ product, qty }))
+            dispatch(addToCart({ product, qty, user }))
 
     };
     console.log(itemsWithCategory)
@@ -91,69 +93,20 @@ const CategoryDetail = () => {
 
             {!isItemDetailPage && (<>
                 <div className='row mb-5'>
+                    <h2 className='lead fw-bold text-secondary mt-3 mb-3'>{selectedCategory?.[0]?.name}</h2>
                     {itemsWithCategory?.length > 0 ? (itemsWithCategory?.map(item => (<div className='col-md-3 mx-auto mt-2'>
 
-                        <Link to={`product/${item.id}`}> <figure className="figure">
+                        <figure className="figure">
                             <img src={item?.image} className="figure-img img-thumbnail rounded" alt={item?.name} />
-                            <figcaption className="figure-caption fw-semibold">{`${item?.name} ${item?.qty} Rs.${item.price}`}</figcaption>
+                            <figcaption className="figure-caption fw-semibold">{`${item?.name} Rs.${item.price}`}</figcaption>
                             <button className='btn btn-success mt-2' onClick={() => addToCartHandler(item)}>Add To Cart</button>
-                        </figure></Link>
+                        </figure>
 
                     </div>))) : <div>Coming Soon!</div>}
-                    {/* <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse3.mm.bing.net/th?id=OIP.MG0OStp9KcuBRHOg0mCQuQHaFj&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Capsicum 1kg</figcaption>
-                            <button className='btn btn-success mt-2'>Add To Cart</button>
-                        </figure>
-                    </div>
-                    <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse3.mm.bing.net/th?id=OIP.wBmTEgRXlaKlVY-gTi2GiQHaFj&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Green Peas 500 gms</figcaption>
-                            <button className='btn btn-success mt-2'>Add To Cart</button>
-                        </figure>
-                    </div>
-                    <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse2.mm.bing.net/th?id=OIP.QwnWcdqv2shQ_mFPf-OO_AHaFj&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Cabbage 500 gms</figcaption>
-                            <button className='btn btn-success mt-2'>Add To Cart</button>
-                        </figure>
-                    </div>
-                    <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse3.mm.bing.net/th?id=OIP.jthREOGzayRmofdRfMaYYQHaFM&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Bananas 6-8 pcs</figcaption>
-                        </figure>
-                    </div>
-                    <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse4.mm.bing.net/th?id=OIP.Y46w_AQLE_Q-faeaDagghgHaFZ&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Oranges 500 gms</figcaption>
-                        </figure>
-                    </div>
-                    <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse1.mm.bing.net/th?id=OIP.41RFBSEaeEVWhBXy_etZDQHaFj&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Apples 500 gms</figcaption>
-                        </figure>
-                    </div>
-                    <div className='col-md-3 mx-auto mt-2'>
-
-                        <figure className="figure">
-                            <a href="/category/1"><img src="https://tse1.mm.bing.net/th?id=OIP.KghvU4nz3oHe8LNfKEi0PwHaFS&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">Fresh Watermelon 500 gms</figcaption>
-                        </figure>
-                    </div> */}
+                  
                 </div></>)}
             <Outlet />
+            <ToastContainer />
         </>
 
     )

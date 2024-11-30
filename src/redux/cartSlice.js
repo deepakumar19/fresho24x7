@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { db } from '../firebase';
-import { collection, addDoc, updateDoc, doc, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,38 +21,14 @@ export const fetchCartFromFirestore = createAsyncThunk(
   }
 );
 
-// export const addToCart = createAsyncThunk(
-//   'cart/addToCart',
-//   async ({ product, qty }, { getState, rejectWithValue }) => {
-//     try{
-//     const cart = getState().cart.cart;
-//     const existingProduct = cart.find((item) => item.productId === product.id);
-
-//         if (existingProduct) {
-//             // Update the quantity of the existing product in the cart
-//             const docRef = doc(db, 'cart', existingProduct.id);
-//             await updateDoc(docRef, {
-//                 quantity: existingProduct.quantity + qty,
-//             });
-//             // toast.success('Product quantity updated!');
-//         } else {
-//             // Add a new product to the cart
-//             await addDoc(collection(db, 'cart'), {
-//                 productId: product.id,
-//                 quantity: qty,
-//             });
-//             // toast.success('Product added to cart!');
-//         }
-//       }catch(err){
-//         return rejectWithValue(err.message);
-//       }
-//   }
-// );
 // Thunk to add a product to the cart
+
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
-  async ({ product, qty }, { getState, rejectWithValue }) => {
+  async ({ product, qty, user }, { getState, rejectWithValue }) => {
+    console.log(user)
     try {
+
       const cart = getState().cart.cart;
       const existingProduct = cart.find((item) => item.productId === product.id);
 
@@ -60,21 +36,23 @@ export const addToCart = createAsyncThunk(
         // Update the quantity of the existing product in the cart
         const docRef = doc(db, 'cart', existingProduct.id);
         await updateDoc(docRef, {
-          quantity: existingProduct.qty + qty,
+          qty: existingProduct.qty + qty
         });
         toast.success('Product quantity updated!');
         return { ...existingProduct, qty: existingProduct.qty + qty };  // Return updated product
       } else {
         // Add a new product to the cart
         const newDocRef = await addDoc(collection(db, 'cart'), {
+          user:user.uid,
           productId: product.id,
-          qty: qty,
+          qty: qty
         });
         toast.success('Product added to cart!');
         return {
           id: newDocRef.id,   // Include the Firestore document ID
           productId: product.id,
           qty: qty,
+          user:user.uid
         }; // Return new product added
       }
     } catch (err) {
@@ -103,6 +81,24 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
+// Thunks for removing an item from the cart
+export const clearCart = createAsyncThunk(
+  'cart/clearCart',
+  async (user, { getState, rejectWithValue }) => {
+    try {
+      const cart = getState().cart.cart;
+      const cartItem = cart.find(item => item.user === user.uid);
+      if (cartItem) {
+        await deleteDoc(doc(db, 'cart', user.uid)); // Remove from Firestore
+        return cartItem.id; // Return the id to remove it from the local state
+      }
+    } catch (err) {
+      toast.error('Failed to clear cart on checkout.');
+      console.error('Error clearing cart:', err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
 // Thunk to update item quantity in Firestore cart
 export const updateCartItemQuantity = createAsyncThunk(
   'cart/updateCartItemQuantity',
@@ -176,10 +172,14 @@ const cartSlice = createSlice({
       // Handle updating cart item quantity
       .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
         const updatedCart = state.cart.map((item) =>
-          item.id === action.payload.id ? { ...item, quantity: action.payload.qty } : item
+          item.id === action.payload.id ? { ...item, qty: action.payload.qty } : item
         );
         state.cart = updatedCart; // Update the item quantity in the local state
-      });
+      })
+      // Handle updating cart item quantity
+      .addCase(clearCart.fulfilled, (state, action) => {
+        state.cart = state.cart.filter(item => item.user !== action.payload); // Remove item from local state
+      })
   },
 });
 

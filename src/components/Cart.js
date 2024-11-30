@@ -59,7 +59,7 @@ const Cart = () => {
     // Combine cart and products into a single list of items
     const itemsWithQuantity = cart.map((cartItem) => {
         const product = products.find((product) => product.id === cartItem.productId);
-        return product ? { ...product, quantity: cartItem.quantity } : null;
+        return product ? { ...product, qty: cartItem.qty } : null;
     }).filter(item => item !== null);
 
     // Handle remove from cart
@@ -72,21 +72,27 @@ const Cart = () => {
         dispatch(updateCartItemQuantity({ id, action }));
     };
 
-
+    const getTotal = () => {
+        return itemsWithQuantity.reduce((acc, curr) => {
+            acc += curr.qty * curr.price
+            return acc;
+        }, 0)
+    }
+    console.log(itemsWithQuantity)
     return (
         <>
-
+            <div className='col-md-12 justify-content-end border mt-3 p-3'>
+                <p className='text-start'>Total Amount: Rs. {getTotal()}</p>
+                <button className='btn btn-warning mt-2 text-center' onClick={handleCheckout}>Checkout</button>
+            </div>
             <div className='row mb-5'>
-                <div className='col-md-12 justify-content-end'>
-                    <p>Total Amount: Rs. 100</p>
-                    <button className='btn btn-warning mt-2' onClick={handleCheckout}>Checkout</button>
-                </div>
+
                 {itemsWithQuantity.length > 0 && (
-                    itemsWithQuantity.map((product) => (<div className='col-md-8 mx-auto mt-5'>
+                    itemsWithQuantity?.map((product) => (<div className='col-md-8 justify-content-start mt-5'>
 
                         <figure className="figure">
-                            <a href="/category/1"><img src={product.image} className="figure-img img-fluid rounded" alt="..." /></a>
-                            <figcaption className="figure-caption fw-semibold">{`${product?.name} ${product?.qty} Rs.${product.price}`}</figcaption>
+                            <img src={product.image} className="figure-img img-fluid rounded" alt={product?.name} />
+                            <figcaption className="figure-caption fw-semibold">{`${product?.name} Rs.${product.price}`}</figcaption>
                             <div className='mt-2 '>
                                 <button className='btn btn-success m-2' onClick={() => handleUpdateQuantity(product.id, 'decrement')}>-</button>
                                 {product.qty}
@@ -95,19 +101,8 @@ const Cart = () => {
                             <button className='btn btn-success mt-2 mx-auto justify-content-center' onClick={() => handleRemoveFromCart(product.id)}>Remove From Cart</button>
                         </figure>
                     </div>)))}
-                {/* <div className='col-md-8 mx-auto mt-5'>
 
-                    <figure className="figure">
-                        <a href="/category/1"><img src="https://tse1.mm.bing.net/th?id=OIP.KghvU4nz3oHe8LNfKEi0PwHaFS&pid=Api&P=0&h=220" className="figure-img img-fluid rounded" alt="..." /></a>
-                        <figcaption className="figure-caption fw-semibold">Fresh Watermelon 500 gms</figcaption>
-                        <div className='mt-2 '>
-                            <button className='btn btn-success m-2'>-</button>
-                            1
-                            <button className='btn btn-success m-2'>+</button>
-                        </div>
-                        <button className='btn btn-success mt-2 mx-auto justify-content-center'>Remove From Cart</button>
-                    </figure>
-                </div> */}
+                <ToastContainer />
 
 
             </div>

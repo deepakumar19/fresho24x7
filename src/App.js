@@ -13,12 +13,15 @@ import Orders from './components/Orders';
 import Checkout from './components/Checkout';
 import SignOut from './components/auth/SignOut';
 import { useLocalStorage } from './components/useLocalStorage';
+import { PrivateRoute } from './components/PrivateRoute';
+import { useState } from 'react';
+import { OrderConfirmation } from './components/OrderConfirmation';
 
 function App() {
-
+  
   const router = createBrowserRouter([{
-    path: "/", element: <Navbar />, children: [{
-      index: true, element: <Home />
+    path: "/", element: <Navbar/>, children: [{
+      index: true, element: <Categories />
     }, {
       path: 'sign-in', element: <Signin />
     },
@@ -31,10 +34,10 @@ function App() {
       }]
     },
     {
-      path: 'cart', element: <Cart />
+      path: 'cart', element: <PrivateRoute element={<Cart />}/>,
     },
     {
-      path: 'orders', element: <Orders />
+      path: 'orders', element: <PrivateRoute element={<Orders />}/>,
     },
     {
       path: 'checkout', element: <Checkout />
@@ -45,11 +48,12 @@ function App() {
     {
       path: '/sign-out', element: <SignOut />
     },
+    {
+      path: '/order-confirmation', element: <OrderConfirmation />
+    },
   ]
   }])
-  // const { setValue, remove } = useLocalStorage("user", "deepa");
-  // setValue();
-  // remove();
+
   return (
     <div className="container bg-light">
       <RouterProvider router={router} />

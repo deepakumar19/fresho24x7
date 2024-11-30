@@ -5,12 +5,15 @@ import { Link } from 'react-router-dom'
 import { db } from '../firebase';
 import { toast, ToastContainer } from 'react-toastify';
 import Spinner from "react-spinner-material"
+import SearchBar from './SearchBar';
 
 const Categories = () => {
     const [categories, setCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
     // Fetch categories from Firestore and listen to updates
+    
     const fetchCategories = useCallback(() => {
         try {
             setLoading(true);
@@ -37,12 +40,23 @@ const Categories = () => {
         const unsub = fetchCategories();
         return () => unsub();  // Clean up the listener
     }, [fetchCategories]);
+
+    useEffect(() => {
+        let filtered = categories;
+        if (searchTerm !== '') {
+          filtered = filtered.filter((category) =>
+            category?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
+          );
+        }
+        setFilteredCategories(filtered);
+      }, [searchTerm, categories, setFilteredCategories])
+
     return (
         <>
-
+ <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
             <h2 className='lead fw-bold text-primary'>Choose a category</h2>
             {!loading ? <div className='row mb-5'>
-                {categories?.map((category) => (<div className='col-md-3 mx-auto mt-2' key={category?.id}>
+                {filteredCategories?.map((category) => (<div className='col-md-3 mx-auto mt-2' key={category?.id}>
 
                     <figure class="figure">
                         <Link to={`/category/${category?.id}`}><img src={category?.image} className="figure-img img-thumbnail rounded" alt={category?.name} /></Link>
