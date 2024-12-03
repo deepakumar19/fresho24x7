@@ -5,12 +5,10 @@ import { useForm } from '../hooks/useForm';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-import { clearCart, removeFromCart, selectCart } from '../redux/cartSlice';
+import { removeFromCart, selectCart } from '../redux/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../redux/authSlice';
-import { getTotal } from '../utils/getTotal';
 import { placeOrder } from '../redux/orderSlice';
-import { useFetchProducts } from '../utils/fetchProducts';
 
 const Checkout = () => {
   const [loading, setLoading] = useState(false)

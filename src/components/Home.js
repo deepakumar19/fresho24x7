@@ -1,5 +1,4 @@
 import React from 'react'
-import SearchBar from './SearchBar'
 import Categories from './Categories'
 
 const Home = () => {

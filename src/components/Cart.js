@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { fetchCartFromFirestore, removeFromCart, selectCart, updateCartItemQuantity } from '../redux/cartSlice'
-import Spinner from 'react-spinner-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { collection, onSnapshot } from 'firebase/firestore';
@@ -9,7 +8,6 @@ import { db } from '../firebase';
 import { selectError, selectLoading } from '../redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTotal } from '../utils/getTotal';
-import { placeOrder } from '../redux/orderSlice';
 
 const Cart = () => {
 

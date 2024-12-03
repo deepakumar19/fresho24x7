@@ -1,6 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Navbar from './components/Navbar';
-import SearchBar from './components/SearchBar';
 import Categories from './components/Categories';
 import Signin from './components/auth/Signin';
 import SignUp from './components/auth/SignUp';
@@ -12,9 +10,7 @@ import Cart from './components/Cart';
 import Orders from './components/Orders';
 import Checkout from './components/Checkout';
 import SignOut from './components/auth/SignOut';
-import { useLocalStorage } from './components/useLocalStorage';
 import { PrivateRoute } from './components/PrivateRoute';
-import { useState } from 'react';
 import { OrderConfirmation } from './components/OrderConfirmation';
 
 function App() {

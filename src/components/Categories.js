@@ -3,7 +3,7 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import styles from './Categories.module.css'
 import { Link } from 'react-router-dom'
 import { db } from '../firebase';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Spinner from "react-spinner-material"
 import SearchBar from './SearchBar';
 
