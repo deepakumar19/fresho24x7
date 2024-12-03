@@ -81,24 +81,6 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
-// Thunks for removing an item from the cart
-export const clearCart = createAsyncThunk(
-  'cart/clearCart',
-  async (user, { getState, rejectWithValue }) => {
-    try {
-      const cart = getState().cart.cart;
-      const cartItem = cart.find(item => item.user === user.uid);
-      if (cartItem) {
-        await deleteDoc(doc(db, 'cart', user.uid)); // Remove from Firestore
-        return cartItem.id; // Return the id to remove it from the local state
-      }
-    } catch (err) {
-      toast.error('Failed to clear cart on checkout.');
-      console.error('Error clearing cart:', err);
-      return rejectWithValue(err.message);
-    }
-  }
-);
 // Thunk to update item quantity in Firestore cart
 export const updateCartItemQuantity = createAsyncThunk(
   'cart/updateCartItemQuantity',
@@ -167,18 +149,14 @@ const cartSlice = createSlice({
       })
       // Handle remove from cart
       .addCase(removeFromCart.fulfilled, (state, action) => {
-        state.cart = state.cart.filter(item => item.id !== action.payload); // Remove item from local state
+        state.cart = state.cart.filter(item => item?.id !== action.payload); // Remove item from local state
       })
       // Handle updating cart item quantity
       .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
-        const updatedCart = state.cart.map((item) =>
-          item.id === action.payload.id ? { ...item, qty: action.payload.qty } : item
+        const updatedCart = state.cart?.map((item) =>
+          item?.id === action.payload?.id ? { ...item, qty: action.payload.qty } : item
         );
         state.cart = updatedCart; // Update the item quantity in the local state
-      })
-      // Handle updating cart item quantity
-      .addCase(clearCart.fulfilled, (state, action) => {
-        state.cart = state.cart.filter(item => item.user !== action.payload); // Remove item from local state
       })
   },
 });

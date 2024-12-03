@@ -38,11 +38,11 @@ const CategoryDetail = () => {
 
     // Set up products fetching on component mount
     useEffect(() => {
-        if (user) {
+        
             const unsub = fetchProducts(); // Start fetching products
             return () => unsub(); // Cleanup the listener when component unmounts
-        }
-    }, [user, fetchProducts]);
+       
+    }, [fetchProducts]);
 
     const fetchCategories = useCallback(() => {
         try {
@@ -81,7 +81,7 @@ const CategoryDetail = () => {
     })
     const addToCartHandler = (product) => {
         if (!user) {
-            navigate("/")
+            navigate("/sign-in")
         }
         else
             dispatch(addToCart({ product, qty, user }))
