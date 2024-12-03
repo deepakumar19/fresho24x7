@@ -1,0 +1,8 @@
+.image {
+    width: 100vw; /* Full viewport width */
+    height: 75vh; /* Full viewport height */
+    object-fit: contain; /* Ensures the image covers the area while maintaining aspect ratio */
+    margin:0; /* Remove any default margins */
+    display: block; /* Prevent the image from being treated as an inline element */
+}
+
