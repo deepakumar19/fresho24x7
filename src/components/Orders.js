@@ -30,23 +30,11 @@ const Orders = () => {
     const unsub = fetchOrders();
     return () => unsub();  // Clean up the listener
   }, [fetchOrders]);
-  // function groupBy(array, field) {
-  //   return array.reduce((acc, item) => {
-  //     const key = item[field];
-  //     if (!acc[key]) {
-  //       acc[key] = [];
-  //     }
-  //     acc[key].push(item);
-  //     return acc;
-  //   }, {});
-  // }
-  // const grouped = groupBy(orders, 'date');
-  // const keys = Object.keys(grouped)
-
+ 
   return (
     <div className='lead mx-auto mt-5'>
       <h1 className='text-center text-secondary'>Orders</h1>
-      <table className="table table-striped">
+      <table className="table table-striped table-responsive">
         <thead>
           <tr>
             <th scope="col">#</th>

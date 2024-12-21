@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import styles from './Categories.module.css'
-import { Link } from 'react-router-dom'
+import styles from './Categories.module.css';
+import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
-import Spinner from "react-spinner-material"
+import Spinner from "react-spinner-material";
 import SearchBar from './SearchBar';
+import Pagination from '../utils/Pagination';
 
 const Categories = () => {
     const [categories, setCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    // Fetch categories from Firestore and listen to updates
-    
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 4;
+
     const fetchCategories = useCallback(() => {
         try {
             setLoading(true);
@@ -25,7 +27,6 @@ const Categories = () => {
                     ...doc.data(),
                 }));
                 setCategories(fetchedCategories);
-                setFilteredCategories(fetchedCategories);
                 setLoading(false);
             });
             return unsub;
@@ -34,103 +35,66 @@ const Categories = () => {
             console.error('Firestore error:', err);
             setLoading(false);
         }
-    }, [setCategories, setFilteredCategories]);
+    }, []);
 
     useEffect(() => {
         const unsub = fetchCategories();
-        return () => unsub();  // Clean up the listener
+        return () => unsub(); // Clean up the listener
     }, [fetchCategories]);
 
     useEffect(() => {
         let filtered = categories;
         if (searchTerm !== '') {
-          filtered = filtered.filter((category) =>
-            category?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
-          );
+            filtered = categories.filter((category) =>
+                category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
         }
-        setFilteredCategories(filtered);
-      }, [searchTerm, categories, setFilteredCategories])
+
+        setFilteredCategories(filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+    }, [categories, searchTerm, currentPage]);
+
+    useEffect(() => {
+        setCurrentPage(1); // Reset to the first page when searchTerm changes
+    }, [searchTerm]);
+
+    const totalFilteredItems = searchTerm ? filteredCategories.length : categories.length;
+    const noOfPages = Math.ceil(totalFilteredItems / pageSize);
+    const pages = Array.from({ length: noOfPages }, (_, i) => i + 1);
 
     return (
         <>
- <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />
             <h2 className='lead fw-bold text-primary'>Choose a category</h2>
-            {!loading ? <div className='row mb-5'>
-                {filteredCategories?.map((category) => (<div className='col-md-3 mx-auto mt-2' key={category?.id}>
-
-                    <figure class="figure">
-                        <Link to={`/category/${category?.id}`}><img src={category?.image} className="figure-img img-thumbnail rounded" alt={category?.name} /></Link>
-                        <figcaption class="figure-caption fw-semibold">{category?.name}</figcaption>
-                    </figure>
-                </div>))}
-                {/* <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                    <a href="/category/2"><img src="https://tse3.mm.bing.net/th?id=OIP.Zh_sTOWi0kS-dAHyuuehvAAAAA&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." /></a>
-                        <figcaption class="figure-caption fw-semibold">Oil & Ghee</figcaption>
-                    </figure>
-
+            {!loading ? (
+                <div className='row mb-5'>
+                    {filteredCategories.map((category) => (
+                        <div className='col-md-3 mx-auto mt-2' key={category?.id}>
+                            <figure className="figure">
+                                <Link to={`/category/${category?.id}`}>
+                                    <img src={category?.image} className="figure-img img-thumbnail rounded" alt={category?.name} />
+                                </Link>
+                                <figcaption className="figure-caption fw-semibold">{category?.name}</figcaption>
+                            </figure>
+                        </div>
+                    ))}
                 </div>
-
-                <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                        <img src="https://tse3.mm.bing.net/th?id=OIP.TqdQUhBYLLBJARrpJvOsfAAAAA&pid=Api&P=0&h=220" className="figure-img img-thumbnail rounded" alt="..." />
-                        <figcaption class="figure-caption fw-semibold">Tea & Coffee</figcaption>
-                    </figure>
-
+            ) : (
+                <div className={styles.spinnerContainer}>
+                    <Spinner radius={120} color={"#003972"} stroke={2} visible={true} />
                 </div>
-
-                <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                        <img src="https://tse4.mm.bing.net/th?id=OIP.F8y5hi7_KpbCthjwfuO7lQHaFj&pid=Api&P=0&h=220" className="figure-img img-fluid rounded" alt="..." />
-                        <figcaption class="figure-caption fw-semibold">Biscuits & Snacks</figcaption>
-                    </figure>
-
+            )}
+            {filteredCategories.length === 0 && !loading && (
+                <div className='d-flex justify-content-center'>
+                    <p>No Items found</p>
                 </div>
-
-                <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                        <img src="https://tse2.mm.bing.net/th?id=OIP.RvWZYxevx-s677lbe7qWlAHaEW&pid=Api&P=0&h=220" className='figure-img img-thumbnail rounded' alt="..." />
-                        <figcaption class="figure-caption fw-semibold">Chips & Namkeen</figcaption>
-                    </figure>
-
+            )}
+            {filteredCategories.length > 0 && (
+                <div className='d-flex justify-content-center'>
+                    <Pagination pages={pages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
                 </div>
-                <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                        <img src="https://tse1.mm.bing.net/th?id=OIP.yUBtzbShgZELKgmqkIgEkAHaEK&pid=Api&P=0&h=220" className='figure-img img-thumbnail rounded' alt="..." />
-                        <figcaption class="figure-caption fw-semibold">Rice, Atta & Dals</figcaption>
-                    </figure>
-
-                </div>
-                <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                        <img src="https://tse4.mm.bing.net/th?id=OIP.EaUZFtSRaPwb2IH_4EYkTgHaDt&pid=Api&P=0&h=220" className='figure-img img-thumbnail rounded' alt="..." />
-                        <figcaption class="figure-caption fw-semibold">Drinks & Juices</figcaption>
-                    </figure>
-
-                </div>
-                <div className='col-md-3 mx-auto mt-2'>
-
-                    <figure class="figure">
-                        <img src="https://tse4.mm.bing.net/th?id=OIP.Lp1G2EoIm-uki0fRXae5KgHaEH&pid=Api&P=0&h=220" className='figure-img img-thumbnail rounded' alt="..." />
-                        <figcaption class="figure-caption fw-semibold">Dairy & Bread</figcaption>
-                    </figure>
-
-                </div> */}
-
-             
-            </div>:(
-                    <div className={styles.spinnerContainer}>
-                        <Spinner radius={120} color={"#003972"} stroke={2} visible={true} />
-                    </div>
-                )}
+            )}
         </>
-    )
-}
+    );
+};
 
-export default Categories
+export default Categories;
