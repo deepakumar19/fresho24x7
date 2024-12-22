@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect} from "react"
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/authSlice'
 import { selectUser, selectLoading, selectError } from '../../redux/authSlice';
@@ -52,7 +52,7 @@ const Signin = () => {
             >
                 {loading ? 'Signing In...' : 'Sign In'}</button>
                 </form>
-                <div className='mt-3'><a href="/sign-up" className={`link-success ${styles.link}`}>Don't have an account? Click here to sign up</a></div>
+                <div className='mt-3'><Link to="/sign-up" className={`link-success ${styles.link}`}>Don't have an account? Click here to sign up</Link></div>
             </div>
             <div  className='col-md-8 mt-0 justify-content-end'>
                 <img src="https://thumbs.dreamstime.com/b/full-grocery-cart-shopping-isolated-white-background-35581745.jpg" className={`img-fluid ${styles.image}`} alt="sign-in"/>
