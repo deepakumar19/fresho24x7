@@ -15,7 +15,7 @@ const Categories = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 4;
+    const pageSize = 8;
 
     const fetchCategories = useCallback(() => {
         try {
