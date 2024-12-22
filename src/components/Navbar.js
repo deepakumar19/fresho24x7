@@ -8,7 +8,7 @@ const Navbar = ({ searchTerm, setSearchTerm }) => {
 
     return (
         <>
-            <nav class="navbar navbar-light" style={{ backgroundColor: '#285943' }}>
+            <nav class="navbar navbar-light navbar-responsive" style={{ backgroundColor: '#285943' }}>
                 <div class="container-fluid">
                     <Link class="navbar-brand text-light fw-bold" to="/">Fresho24x7</Link>
                     <ul class="nav justify-content-end">
