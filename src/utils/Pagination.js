@@ -15,15 +15,15 @@ const Pagination = ({pages, currentPage, setCurrentPage}) => {
     return (
         <nav aria-label="Page navigation example">
             <ul className="pagination">
-                <li className="page-item" onClick={handlePrev}><a className="page-link" href="#">Previous</a></li>
+                <li className="page-item" onClick={handlePrev}><button className="page-link" href="#">Previous</button></li>
                 {
                     pages?.map(page=>(
-                        <li class="page-item" onClick={()=>setCurrentPage(page)} key={page}><a className="page-link" href="#">{page}</a></li>
+                        <li class="page-item" onClick={()=>setCurrentPage(page)} key={page}><button className="page-link" href="#">{page}</button></li>
                     ))
                 }
                
                
-                <li className="page-item" onClick={handleNext}><a className="page-link" href="#">Next</a></li>
+                <li className="page-item" onClick={handleNext}><button className="page-link" href="#">Next</button></li>
             </ul>
         </nav>
     )

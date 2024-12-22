@@ -11,7 +11,7 @@ import { selectUser } from '../redux/authSlice';
 import { placeOrder } from '../redux/orderSlice';
 
 const Checkout = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useForm({ name: '', address: '', phone: '' })
   const [products, setProducts] = useState([])
   const navigate = useNavigate();
@@ -58,17 +58,22 @@ const Checkout = () => {
         return product ? { ...product, qty: cartItem.qty } : null;
       }).filter(item => item !== null);
       console.log(itemsWithQuantity);
+       // eslint-disable-next-line array-callback-return
       itemsWithQuantity.map(item => {
-        dispatch(placeOrder({ name: item.name, qty: item.qty, price: item.price, user }))
+        // eslint-disable-next-line array-callback-return
+         dispatch(placeOrder({ name: item.name, qty: item.qty, price: item.price, user }))
       })
+      // eslint-disable-next-line array-callback-return
       cart.map(c => {
+         
         if (c.user === user.uid) {
-          console.log(c)
-
-          dispatch(removeFromCart(c.productId));
+          
+          // eslint-disable-next-line array-callback-return
+           dispatch(removeFromCart(c.productId));
 
 
         }
+        
       });
 
       setLoading(false)

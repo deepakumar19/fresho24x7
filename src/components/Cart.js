@@ -5,7 +5,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
-import { selectError, selectLoading } from '../redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTotal } from '../utils/getTotal';
 
@@ -15,9 +14,7 @@ const Cart = () => {
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const user = useSelector(state => state.authentication.user); // Get user from Redux
-    const loading = useSelector(selectLoading); // Loading state from Redux
     const cart = useSelector(selectCart); // Get cart from Redux store
-    const error = useSelector(selectError); // Error state from Redux
 
    
     // If no user, navigate to home page

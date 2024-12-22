@@ -1,9 +1,7 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
 
 const ProductDetail = () => {
 
-  const id = useParams().productId
   return (
     <div className='col-md-6 mx-auto mt-5'>
 

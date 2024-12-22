@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import styles from './Categories.module.css';
 import { Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import Spinner from "react-spinner-material";
 import SearchBar from './SearchBar';
 import Pagination from '../utils/Pagination';
+import "../../src/styles.css";
+
 
 const Categories = () => {
     const [categories, setCategories] = useState([]);
@@ -79,7 +80,7 @@ const Categories = () => {
                     ))}
                 </div>
             ) : (
-                <div className={styles.spinnerContainer}>
+                <div className={'spinnerContainer'}>
                     <Spinner radius={120} color={"#003972"} stroke={2} visible={true} />
                 </div>
             )}

@@ -9,7 +9,7 @@ import styles from "./Signin.module.css";
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [msg, setMsg] = useState('')
+    const [msg] = useState('')
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Signin = () => {
     const loading = useSelector(selectLoading);
     const error = useSelector(selectError);
 
-    console.log(user)
+    
     
     // Redirect to products page if logged in
     useEffect(() => {
@@ -55,7 +55,7 @@ const Signin = () => {
                 <div className='mt-3'><a href="/sign-up" className={`link-success ${styles.link}`}>Don't have an account? Click here to sign up</a></div>
             </div>
             <div  className='col-md-8 mt-0 justify-content-end'>
-                <img src="https://thumbs.dreamstime.com/b/full-grocery-cart-shopping-isolated-white-background-35581745.jpg" className={`img-fluid ${styles.image}`}/>
+                <img src="https://thumbs.dreamstime.com/b/full-grocery-cart-shopping-isolated-white-background-35581745.jpg" className={`img-fluid ${styles.image}`} alt="sign-in"/>
             </div>
         </div>
     )

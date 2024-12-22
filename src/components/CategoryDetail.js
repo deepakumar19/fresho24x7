@@ -9,6 +9,7 @@ import { addToCart } from '../redux/cartSlice';
 import styles from "./CategoryDetail.module.css";
 import Pagination from '../utils/Pagination';
 import Spinner from 'react-spinner-material';
+import "../../src/styles.css";
 
 const CategoryDetail = () => {
     const [products, setProducts] = useState([]);
@@ -85,7 +86,6 @@ const CategoryDetail = () => {
 
     });
     const sliced = itemsWithCategory.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-    const totalFilteredItems = sliced.length;
     const noOfPages = Math.ceil(itemsWithCategory?.length / pageSize);
     const pages = Array.from({ length: noOfPages }, (_, i) => i + 1);
 
@@ -119,7 +119,7 @@ const CategoryDetail = () => {
 
 
                 </div>
-                {loading && <div className={styles.spinnerContainer}>
+                {loading && <div className={'spinnerContainer'}>
                             <Spinner radius={120} color={"#003972"} stroke={2} visible={true} />
                         </div>}
                 {sliced.length > 0 && (
