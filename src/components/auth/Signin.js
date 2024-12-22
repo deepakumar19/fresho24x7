@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/authSlice';
 import { selectUser, selectLoading, selectError } from '../../redux/authSlice';
-import styles from './Signin.module.css';
 
 const Signin = () => {
     const [email, setEmail] = useState('');
@@ -31,6 +30,7 @@ const Signin = () => {
         const validationErrors = {};
         if (!email) {
             validationErrors.email = 'Email is required';
+            //eslint-disable-next-line no-useless-escape
         } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
             validationErrors.email = 'Enter a valid email address';
         }
