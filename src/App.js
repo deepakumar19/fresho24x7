@@ -5,7 +5,6 @@ import SignUp from './components/auth/SignUp';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './components/Home';
 import CategoryDetail from './components/CategoryDetail';
-import ProductDetail from './components/ProductDetail';
 import Cart from './components/Cart';
 import Orders from './components/Orders';
 import Checkout from './components/Checkout';
@@ -25,9 +24,7 @@ function App() {
       path: 'sign-up', element: <SignUp />
     },
     {
-      path: 'category/:id', element: <CategoryDetail/>, children:[{ 
-        path: 'product/:productId', element: <ProductDetail />
-      }]
+      path: 'category/:id', element: <CategoryDetail/>
     },
     {
       path: 'cart', element: <PrivateRoute element={<Cart />}/>,
