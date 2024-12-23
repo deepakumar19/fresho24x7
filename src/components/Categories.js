@@ -5,7 +5,7 @@ import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import Spinner from "react-spinner-material";
 import SearchBar from './SearchBar';
-import Pagination from '../utils/Pagination';
+import Pagination from './Pagination';
 import "../../src/styles.css";
 
 
